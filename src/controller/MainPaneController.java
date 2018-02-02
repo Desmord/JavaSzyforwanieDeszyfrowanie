@@ -3,9 +3,9 @@ package controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -17,7 +17,7 @@ import javafx.scene.input.MouseEvent;
 public class MainPaneController implements Initializable {
 
 	@FXML
-	private ChoiceBox<?> encriptionChoiseBox;
+	private ChoiceBox<String> encriptionChoiseBox;
 
 	@FXML
 	private TextArea codeTextField;
@@ -36,6 +36,11 @@ public class MainPaneController implements Initializable {
 		System.out.println("Witam");
 		proba();
 		proba2();
+		setChoiceBoxItems();
+	}
+	
+	private void setChoiceBoxItems() {
+		encriptionChoiseBox.setItems(FXCollections.observableArrayList("a","b","c"));
 	}
 	
 	private void proba2() {
