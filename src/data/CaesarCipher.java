@@ -1,17 +1,17 @@
 package data;
 
-public class CaesarCipher extends Code {
+public class CaesarCipher extends Encryption {
 
 	@Override
 	public String encrypt(String text) {
 		// TODO Auto-generated method stub
-		return null;
+		return "zaszyfrowany";
 	}
 
 	@Override
 	public String decrypt(String text) {
 		// TODO Auto-generated method stub
-		return null;
+		return "deszyfrowany";
 	}
 
 	@Override
