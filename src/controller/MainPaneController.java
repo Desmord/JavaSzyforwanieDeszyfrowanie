@@ -35,31 +35,85 @@ public class MainPaneController implements Initializable {
 	@FXML
 	private Button decryptButton;
 
+	@FXML
+	private Label keyLabel;
+
+	@FXML
+	private TextArea keyTextField;
+
+	@FXML
+	private Button clearButton;
+
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 
 		addEncryptionListElements();
-		setEncryptionButtonEvent();
-		setDecryptionButtonEvent();
-		setCodeTextFieldChangeEvents();
+
+		setEncryptionBoxEvent();
+
+		setButtonsEvents();
+
+		setTextFieldsEvents();
 
 	}
 
 	private void addEncryptionListElements() {
-		encriptionChoiseBox.setItems(FXCollections.observableArrayList("Szyfr Cezara"));
+
+		encriptionChoiseBox.setItems(FXCollections.observableArrayList("Szyfr Cezara", "Szyfr Vigenere’a"));
+
+		keyTextField.setDisable(true);
+	}
+
+	private void setEncryptionBoxEvent() {
+
+		encriptionChoiseBox.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				if (encriptionChoiseBox.getValue() == "Szyfr Vigenere’a") {
+					keyTextField.setDisable(false);
+				} else {
+					keyTextField.setDisable(true);
+				}
+			}
+
+		});
+	}
+
+	private void setButtonsEvents() {
+		setEncryptionButtonEvent();
+		setDecryptionButtonEvent();
+		setClearButtonEvent();
+	}
+
+	private void setClearButtonEvent() {
+
+		clearButton.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+
+				codeTextField.setText("");
+				keyTextField.setText("");
+
+			}
+
+		});
 	}
 
 	private void setEncryptionButtonEvent() {
+
 		encryptButton.setOnAction(new EventHandler<ActionEvent>() {
+
 			@Override
 			public void handle(ActionEvent event) {
 
-				if (properText() && selectedEncryption()) {
+				if (properText() && selectedEncryption() && zeroLenghtText()) {
 
 					actionTitleLabel.setTextFill(Color.BLACK);
 					actionTitleLabel.setText("");
 
-					codeTextField.setText(encryption.encrypt(encriptionChoiseBox.getValue(), codeTextField.getText()));
+					codeTextField.setText(encryption.encrypt(encriptionChoiseBox.getValue(), codeTextField.getText(),keyTextField.getText()));
 
 				} else {
 					actionTitleLabel.setTextFill(Color.RED);
@@ -72,16 +126,18 @@ public class MainPaneController implements Initializable {
 	}
 
 	private void setDecryptionButtonEvent() {
+
 		decryptButton.setOnAction(new EventHandler<ActionEvent>() {
+
 			@Override
 			public void handle(ActionEvent event) {
 
-				if (properText() && selectedEncryption()) {
+				if (properText() && selectedEncryption() && zeroLenghtText()) {
 
 					actionTitleLabel.setTextFill(Color.BLACK);
 					actionTitleLabel.setText("");
 
-					codeTextField.setText(encryption.decrypt(encriptionChoiseBox.getValue(), codeTextField.getText()));
+					codeTextField.setText(encryption.decrypt(encriptionChoiseBox.getValue(), codeTextField.getText(),keyTextField.getText()));
 
 				} else {
 					actionTitleLabel.setTextFill(Color.RED);
@@ -111,6 +167,18 @@ public class MainPaneController implements Initializable {
 
 	}
 
+	private boolean zeroLenghtText() {
+
+		if (codeTextField.getText().length() == 0) {
+			return false;
+		} else if (!keyTextField.isDisabled() && keyTextField.getText().length() == 0) {
+			return false;
+		} else {
+			return true;
+		}
+
+	}
+
 	private boolean selectedEncryption() {
 
 		if (encriptionChoiseBox.getValue() != null) {
@@ -119,26 +187,32 @@ public class MainPaneController implements Initializable {
 		return false;
 	}
 
-	private void setCodeTextFieldChangeEvents() {
+	private void setTextFieldsEvents() {
+		setTextFieldChangeEvents(keyTextField);
+		setTextFieldChangeEvents(codeTextField);
+	}
 
-		codeTextField.addEventFilter(KeyEvent.KEY_PRESSED, x -> {
+	private void setTextFieldChangeEvents(TextArea element) {
+		element.addEventFilter(KeyEvent.KEY_PRESSED, x -> {
 
-			String text = codeTextField.getText();
+			String text = element.getText();
 
-			if (text.length() > 500) {
+			try {
+				if (text.length() > 500) {
 
-				actionTitleLabel.setTextFill(Color.RED);
-				actionTitleLabel.setText("Makszymalna liczba \n znaków to 500.");
+					actionTitleLabel.setTextFill(Color.RED);
+					actionTitleLabel.setText("Makszymalna liczba \n znaków to 500.");
 
-				codeTextField.setText(text.substring(0, text.length() - 1));
-				codeTextField.end();
+					element.setText(text.substring(0, text.length() - 1));
+					element.end();
 
-			} else {
-				actionTitleLabel.setText("");
-				actionTitleLabel.setTextFill(Color.BLACK);
+				} else {
+					actionTitleLabel.setText("");
+					actionTitleLabel.setTextFill(Color.BLACK);
+				}
+			} catch (NullPointerException e) {
 			}
 
 		});
 	}
-
 }

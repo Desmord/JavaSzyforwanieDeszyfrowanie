@@ -11,7 +11,7 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainPaneController">
    <children>
-      <VBox prefHeight="300.0" prefWidth="800.0">
+      <VBox prefHeight="500.0" prefWidth="800.0">
          <children>
             <HBox prefHeight="30.0" prefWidth="800.0">
                <VBox.margin>
@@ -48,10 +48,28 @@
                <children>
                   <Button fx:id="encryptButton" mnemonicParsing="false" prefWidth="100.0" text="Szyfruj">
                      <HBox.margin>
-                        <Insets left="280.0" right="20.0" />
+                        <Insets left="220.0" right="20.0" />
                      </HBox.margin>
                   </Button>
                   <Button fx:id="decryptButton" mnemonicParsing="false" prefWidth="100.0" text="Deszyfruj" />
+                  <Button fx:id="clearButton" mnemonicParsing="false" prefWidth="100.0" text="Wyczyść pola">
+                     <HBox.margin>
+                        <Insets left="15.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+            <HBox prefHeight="150.0" prefWidth="800.0">
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+               <children>
+                  <Label fx:id="keyLabel" text="Wpisz klucz">
+                     <HBox.margin>
+                        <Insets left="100.0" right="30.0" />
+                     </HBox.margin>
+                  </Label>
+                  <TextArea fx:id="keyTextField" prefHeight="150.0" prefWidth="400.0" />
                </children>
             </HBox>
          </children>
