@@ -59,7 +59,7 @@ public class MainPaneController implements Initializable {
 
 	private void addEncryptionListElements() {
 
-		encriptionChoiseBox.setItems(FXCollections.observableArrayList("Szyfr Cezara", "Szyfr Vigenere’a"));
+		encriptionChoiseBox.setItems(FXCollections.observableArrayList("Szyfr Cezara", "Szyfr Vigenere’a","Szyfr przestawieniowy - wspak"));
 
 		keyTextField.setDisable(true);
 	}
