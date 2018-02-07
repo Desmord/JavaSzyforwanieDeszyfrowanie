@@ -8,49 +8,23 @@ public class VigenereCipher extends Encryption {
 	public String encrypt(String text, String key) {
 
 		String encryptedText = "";
+		int textIndex = 0;
+		int keyIndex = 0;
+		boolean isUpperCase = false;
 
 		createProperEncryptionKey(text, key);
 
-		int textIndex = 0;
-		int keyIndex = 0;
-
-		boolean isUpperCase = false;
-
 		for (int i = 0; i < text.length(); i++) {
 
-			if (text.substring(i, i + 1).matches(" ")) {
+			if (isSpace(text.substring(i, i + 1))) {
 				encryptedText = encryptedText + " ";
 			} else {
 
-				// Wyszukiwanie indexow textu -> funkcja
-				if (isletterUpperCase(text.substring(i, i + 1))) {
+				isUpperCase = isletterUpperCase(text.substring(i, i + 1));
 
-					isUpperCase = true;
+				textIndex = getTextLetterIndex(text.substring(i, i + 1));
 
-					for (int j = 0; j < UPPER_ALFABET_LETTERS.length; j++) {
-						if (text.substring(i, i + 1).equals(UPPER_ALFABET_LETTERS[j])) {
-							textIndex = j;
-						}
-					}
-
-				} else {
-
-					isUpperCase = false;
-
-					for (int j = 0; j < ALFABET_LETTERS.length; j++) {
-						if (text.substring(i, i + 1).equals(ALFABET_LETTERS[j])) {
-							textIndex = j;
-						}
-					}
-
-				}
-
-				// wyszukiwanie indexu klucza
-				for (int j = 0; j < ALFABET_LETTERS.length; j++) {
-					if (this.key.substring(i, i + 1).toLowerCase().equals(ALFABET_LETTERS[j])) {
-						keyIndex = j;
-					}
-				}
+				keyIndex = getKeyIndex(this.key.substring(i, i + 1));
 
 				// Sprawdzanie czy jest wiekszy
 				if (textIndex >= keyIndex) {
@@ -76,49 +50,23 @@ public class VigenereCipher extends Encryption {
 	public String decrypt(String text, String key) {
 
 		String decryptedText = "";
+		int textIndex = 0;
+		int keyIndex = 0;
+		boolean isUpperCase = false;
 
 		createProperEncryptionKey(text, key);
 
-		int textIndex = 0;
-		int keyIndex = 0;
-
-		boolean isUpperCase = false;
-
 		for (int i = 0; i < text.length(); i++) {
 
-			if (text.substring(i, i + 1).matches(" ")) {
+			if (isSpace(text.substring(i, i + 1))) {
 				decryptedText = decryptedText + " ";
 			} else {
 
-				// Wyszukiwanie indexow textu -> funkcja
-				if (isletterUpperCase(text.substring(i, i + 1))) {
+				isUpperCase = isletterUpperCase(text.substring(i, i + 1));
 
-					isUpperCase = true;
+				textIndex = getTextLetterIndex(text.substring(i, i + 1));
 
-					for (int j = 0; j < UPPER_ALFABET_LETTERS.length; j++) {
-						if (text.substring(i, i + 1).equals(UPPER_ALFABET_LETTERS[j])) {
-							textIndex = j;
-						}
-					}
-
-				} else {
-
-					isUpperCase = false;
-
-					for (int j = 0; j < ALFABET_LETTERS.length; j++) {
-						if (text.substring(i, i + 1).equals(ALFABET_LETTERS[j])) {
-							textIndex = j;
-						}
-					}
-
-				}
-
-				// wyszukiwanie indexu klucza
-				for (int j = 0; j < ALFABET_LETTERS.length; j++) {
-					if (this.key.substring(i, i + 1).toLowerCase().equals(ALFABET_LETTERS[j])) {
-						keyIndex = j;
-					}
-				}
+				keyIndex = getKeyIndex(this.key.substring(i, i + 1));
 
 				// Sprawdzanie czy jest wiekszy
 				if (textIndex + keyIndex < 32) {
@@ -126,6 +74,12 @@ public class VigenereCipher extends Encryption {
 						decryptedText = decryptedText + UPPER_ALFABET_LETTERS[textIndex + keyIndex];
 					} else {
 						decryptedText = decryptedText + ALFABET_LETTERS[textIndex + keyIndex];
+					}
+				} else if (keyIndex - (33 - textIndex) < 0) {
+					if (isUpperCase) {
+						decryptedText = decryptedText + UPPER_ALFABET_LETTERS[0];
+					} else {
+						decryptedText = decryptedText + ALFABET_LETTERS[0];
 					}
 				} else {
 					if (isUpperCase) {
@@ -143,6 +97,46 @@ public class VigenereCipher extends Encryption {
 	@Override
 	public String toString() {
 		return "Szyfr Vigenere’a";
+	}
+
+	private int getKeyIndex(String letter) {
+
+		// wyszukiwanie indexu klucza
+		for (int j = 0; j < ALFABET_LETTERS.length; j++) {
+			if (letter.toLowerCase().equals(ALFABET_LETTERS[j])) {
+				return j;
+			}
+		}
+
+		return 1;
+	}
+
+	private int getTextLetterIndex(String letter) {
+
+		// Wyszukiwanie indexow textu -> funkcja
+		if (isletterUpperCase(letter)) {
+
+			// isUpperCase = true;
+
+			for (int j = 0; j < UPPER_ALFABET_LETTERS.length; j++) {
+				if (letter.equals(UPPER_ALFABET_LETTERS[j])) {
+					return j;
+				}
+			}
+
+		} else {
+
+			// isUpperCase = false;
+
+			for (int j = 0; j < ALFABET_LETTERS.length; j++) {
+				if (letter.equals(ALFABET_LETTERS[j])) {
+					return j;
+				}
+			}
+
+		}
+
+		return 1;
 	}
 
 	/**
@@ -176,6 +170,16 @@ public class VigenereCipher extends Encryption {
 				this.key = this.key + key.substring(0, restNumber);
 			}
 
+		}
+
+	}
+
+	private boolean isSpace(String letter) {
+
+		if (letter.matches(" ")) {
+			return true;
+		} else {
+			return false;
 		}
 
 	}
